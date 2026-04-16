@@ -1,6 +1,7 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.5.14-SNAPSHOT'
+	// 1. 불안정한 SNAPSHOT 대신 안정적인 정식 버전(3.2.5)으로 변경
+	id 'org.springframework.boot' version '3.2.5'
 	id 'io.spring.dependency-management' version '1.1.7'
 }
 
@@ -15,7 +16,7 @@ java {
 
 repositories {
 	mavenCentral()
-	maven { url = 'https://repo.spring.io/snapshot' }
+	// 2. 정식 버전을 쓰므로 스냅샷 저장소(repo.spring.io/snapshot)는 삭제함
 }
 
 dependencies {
@@ -23,16 +24,25 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.12.1'
+
 	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// 3. 🌟 핵심: Gradle이 JUnit 4를 인식하고 실행할 수 있도록 빈티지(Vintage) 엔진 추가
+	testImplementation 'org.junit.vintage:junit-vintage-engine'
+	testImplementation 'junit:junit:4.13.2'
+
 	testCompileOnly 'org.projectlombok:lombok'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	testAnnotationProcessor 'org.projectlombok:lombok'
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+	useJUnitPlatform() // 빈티지 엔진이 추가되었으므로 이제 여기서 JUnit 4 테스트도 찾아서 실행해 줌
 }
