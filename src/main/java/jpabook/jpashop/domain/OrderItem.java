@@ -2,7 +2,9 @@ package jpabook.jpashop.domain;
 
 import jakarta.persistence.*;
 import jpabook.jpashop.domain.item.Item;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import static jakarta.persistence.FetchType.LAZY;
@@ -10,6 +12,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED) // protected로 함으로써, 다른 tier 기본 생성자 차단
 public class OrderItem {
 
     @Id
@@ -40,12 +43,14 @@ public class OrderItem {
     }
 
     //==비즈니스 로직==//
+    /**
+     * 주문 취소
+     */
     public void cancle() {
         getItem().addStock(count);
     }
 
     //==조회 로직==//
-
     /**
      * 주문상품 전체 가격 조회
      */
