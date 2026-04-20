@@ -22,6 +22,14 @@ public class OrderRepository {
     }
 
     // 유저이름으로 조회 - 동적쿼리 생성
-//    public List<Order> findAll(OrderSearch orderSearch){}
+    public List<Order> findAll(OrderSearch orderSearch) {
+        String jpql = "select o from Order o join o.member m";
+
+
+        return em.createQuery(jpql, Order.class)
+                .setMaxResults(1000)
+                .getResultList();
+    }
+
 
 }
